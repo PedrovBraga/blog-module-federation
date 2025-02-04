@@ -33,7 +33,10 @@ module.exports = {
         name: 'auth',
         filename: 'remoteEntry.js',
         exposes: {
-            './AuthApp': './src/components/App',
+            './AuthApp': './src/App',
+        },
+        remotes: {
+          container: 'container@http://localhost:3000/remoteEntry.js',
         },
         shared: {
             react: {

@@ -1,10 +1,10 @@
 {
   "name": "auth",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx webpack serve"
   },
   "keywords": [],
   "author": "",
@@ -19,5 +19,10 @@
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0"
-  }
+  },
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2",
+    "react-router-dom": "^7.1.5"
+  },
+  "description": ""
 }

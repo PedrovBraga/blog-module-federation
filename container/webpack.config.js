@@ -26,6 +26,10 @@ module.exports = {
           },
         },
       },
+      {
+        test: /\.css$/, // Regra para processar arquivos CSS
+        use: ['style-loader', 'css-loader'],
+      },
     ],
   },
   plugins: [
@@ -39,6 +43,10 @@ module.exports = {
       remotes: {
         auth: 'auth@http://localhost:3001/remoteEntry.js', // Remote do auth
         blog: 'blog@http://localhost:3002/remoteEntry.js', // Remote do blog
+      },
+      filename: 'remoteEntry.js',
+      exposes: {
+        './BootstrapCSS': './src/bootstrap-css.js',
       },
       shared: {
         react: {

@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const { check, validationResult } = require('express-validator');
 
 const app = express();
 const PORT = 3011;
@@ -38,15 +40,61 @@ app.post('/auth/login', (req, res) => {
   return res.status(401).json({ message: 'Email ou senha inválidos' });
 });
 
-app.post('/auth/register', async (req, res) => {
-    const { email, password, name, cpf } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10); // Hash da senha
-    // Salvar no banco de dados (exemplo simplificado)
-    const newUser = { id: Date.now(), email, password: hashedPassword, name, cpf };
-    res.status(201).json({ message: 'User registered successfully', user: newUser });
+app.post('/auth/register', [
+  check('name').notEmpty().withMessage('Nome é obrigatório'),
+  
+  // Verificação do e-mail
+  check('email').isEmail().withMessage('Por favor, insira um e-mail válido')
+    .custom(async (value) => {
+      const user = await User.findOne({ email: value });
+      if (user) {
+        throw new Error('Este e-mail já está registrado');
+      }
+    }),
+
+  // Validação do CPF
+  check('cpf').isLength({ min: 11, max: 11 }).withMessage('CPF deve ter 11 dígitos')
+    .isNumeric().withMessage('CPF deve conter apenas números')
+    .custom((value) => {
+      // Expressão regular para validar o formato do CPF (apenas números)
+      const cpfRegex = /^[0-9]{11}$/;
+      if (!cpfRegex.test(value)) {
+        throw new Error('CPF inválido. Deve conter apenas números e ter 11 dígitos.');
+      }
+      return true;
+    }),
+
+  // Validação da senha
+  check('password').isLength({ min: 6 }).withMessage('A senha deve ter no mínimo 6 caracteres'),
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ message: errors.array()[0].msg });
+  }
+
+  const { name, email, password, cpf } = req.body;
+
+  try {
+    // Criação de um novo usuário
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const user = new User({
+      name,
+      email,
+      password: hashedPassword,
+      cpf,
+    });
+
+    await user.save();
+    res.status(201).json({ message: 'Usuário registrado com sucesso!' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erro ao registrar usuário, tente novamente mais tarde.' });
+  }
 });
 
-app.get('/auth/validate', authMiddleware, (req, res) => {
+app.get('/auth/validate', (req, res) => {
     res.json({ message: 'Token is valid', user: req.user });
 });
 

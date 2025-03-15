@@ -12,6 +12,7 @@ module.exports = {
   devServer: {
     port: 3000, // Porta do container
     static: path.join(__dirname, 'dist'),
+    historyApiFallback: true, // Garante que rotas internas funcionem
     hot: true, // Atualização ao vivo
   },
   module: {
@@ -22,7 +23,7 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react'], // Suporte a React e ES6+
+            presets: [['@babel/preset-env', { targets: 'defaults' }], '@babel/preset-react'], // Suporte a React e ES6+
           },
         },
       },
@@ -47,6 +48,7 @@ module.exports = {
       filename: 'remoteEntry.js',
       exposes: {
         './BootstrapCSS': './src/bootstrap-css.js',
+        './Layout': './src/components/Layout.js'
       },
       shared: {
         react: {
@@ -56,6 +58,10 @@ module.exports = {
         'react-dom': {
           singleton: true,
           requiredVersion: '^19.0.0',
+        },
+        'react-router-dom': { 
+          singleton: true,
+          requiredVersion: '"react-router-dom": "^7.1.5"'
         },
       },
     }),

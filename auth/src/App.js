@@ -5,17 +5,26 @@ import Register from './components/Auth/Register';
 import ResetPassword from './components/Auth/ResetPassword';
 import Logout from './components/Auth/Logout';
 
-const App = () => {
+const App = ({isContainer}) => {
+
+  const routes = (
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/logout" element={<Logout />} />
+    </Routes>
+  );
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} /> {/* Rota padrão */}
-        <Route path="/auth/login" element={<Login />} />
-        <Route path="/auth/register" element={<Register />} />
-        <Route path="/auth/reset-password" element={<ResetPassword />} />
-        <Route path="/auth/logout" element={<Logout />} />
-      </Routes>
-    </Router>
+    <>
+      {!isContainer ? (
+        <Router>{routes}</Router> // Renderiza o Router se não estiver no container
+      ) : (
+        routes // Apenas as rotas, sem o Router, se estiver no container
+      )}
+    </>
   );
 };
 

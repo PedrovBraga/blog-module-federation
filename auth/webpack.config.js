@@ -7,6 +7,7 @@ module.exports = {
   mode: 'development',    // Modo de desenvolvimento
   devServer: {
     port: 3001,           // Porta onde o Auth será servido
+    historyApiFallback: true, // Redireciona todas as requisições para o index.html
   },
   output: {
     publicPath: 'http://localhost:3001/', // Caminho público para os assets
@@ -46,6 +47,10 @@ module.exports = {
             'react-dom': {
                 singleton: true,
                 requiredVersion: '^19.0.0',
+            },
+            'react-router-dom': { 
+              singleton: true,
+              requiredVersion: '"react-router-dom": "^7.1.5"'
             },
         },
     }),

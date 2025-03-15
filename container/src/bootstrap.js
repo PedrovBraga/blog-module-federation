@@ -1,33 +1,32 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Layout from './components/Layout';
+import Teste from './components/Teste';
+import Auth from 'auth/AuthApp';
+import Blog from 'blog/BlogApp';
 
-// Carrega os remotes dos microfrontends
-const AuthApp = React.lazy(() => import('auth/AuthApp'));
-const BlogApp = React.lazy(() => import('blog/BlogApp'));
+// Carregar os microfrontends diretamente com import()
+// const Auth = () => import('auth/AuthApp');
+// const Blog = () => import('blog/BlogApp');
 
-// Componente principal do container
 const App = () => {
   return (
-    <React.Suspense fallback={<div>Loading...</div>}>
-      <div>
-        <h1>Container</h1>
-        <hr />
-        <div>
-          <h2>Auth Microfrontend</h2>
-          <AuthApp />
-        </div>
-        <hr />
-        <div>
-          <h2>Blog Microfrontend</h2>
-          <BlogApp />
-        </div>
-      </div>
-    </React.Suspense>
+    <Router>
+      <Layout isContainer={true}>
+        <Suspense fallback={<div>Carregando...</div>}>
+          <Routes>
+            <Route path="/" element={<Teste/>} />
+            <Route path="/blog/*" element={<Blog/>} />
+            <Route path="/auth/*" element={<Auth/>} />
+          </Routes>
+        </Suspense>
+      </Layout>
+    </Router>
   );
 };
 
-const rootElement = document.getElementById("root"); // Certifique-se de que o ID corresponde ao definido no HTML
+const rootElement = document.getElementById('root');
 const root = ReactDOM.createRoot(rootElement);
-root.render(<React.StrictMode><App/></React.StrictMode>)
+root.render(<React.StrictMode><App /></React.StrictMode>);

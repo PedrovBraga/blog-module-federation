@@ -24,7 +24,7 @@ const Logout = () => {
   return (
     <div className="container mt-5">
       <h2>Logout</h2>
-      <button onClick={handleLogout} className="btn btn-danger">Logout</button>
+      <p>Você está desconectado do sistema!</p>
       {message && <div className="alert alert-info mt-3">{message}</div>}
     </div>
   );

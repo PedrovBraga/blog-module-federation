@@ -1,95 +1,107 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    cpf: '',
+  });
   const [message, setMessage] = useState('');
-  const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email || !password) {
-      setError('Both fields are required');
+    setLoading(true);
+    setMessage('');
+
+    // Validação do formato de e-mail
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (!emailRegex.test(formData.email)) {
+      setMessage('Por favor, insira um e-mail válido.');
+      setLoading(false);
       return;
     }
 
     try {
-      const response = await fetch('http://localhost:3011/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      })
-
-      const data = await response.json();
-
-      if(!response.ok){
-        throw new Error(data.message || 'Erro ao autenticar');
-      }
-
-      setMessage(data.message);
-      setToken(data.token);
-      setError(null);
-    } catch(err) {
-      setError(err.message);
-      setMessage('');
+      const response = await axios.post('http://localhost:3011/auth/register', formData);
+      setMessage(response.data.message);
+      setFormData({ email: '', password: '' });
+    } catch (error) {
+      setMessage(
+        error.response?.data?.message || 'Erro ao registrar. Tente novamente mais tarde.'
+      );
+    } finally {
+      setLoading(false);
     }
-
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container my-5">
       <div className="row justify-content-center">
-        <div className="col-md-6 col-lg-4">
-          <div className="card shadow-lg">
-            <div className="card-body">
-              <h1 className="text-center mb-4">Login</h1>
-              <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                  <label htmlFor="email" className="form-label">
-                    Email:
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    className="form-control"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="password" className="form-label">
-                    Password:
-                  </label>
-                  <input
-                    type="password"
-                    id="password"
-                    className="form-control"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
-                    required
-                  />
-                </div>
-                {error && <div className="alert alert-danger">{error}</div>}
-                {message && <p className="text-success mt-3">{message}</p>}
-                <div className="d-grid">
-                  <button type="submit" className="btn btn-success">
-                    Login
-                  </button>
-                </div>
-              </form>
-              {token && (
-                <div className="mt-5">
-                  <h5>Token:</h5>
-                  <code>{token}</code>
+        <div className="col-md-6">
+          <div className="card shadow-lg p-4">
+            <h2 className="card-title text-center mb-4">Login</h2>
+            <form onSubmit={handleSubmit}>
+
+              {/* Email */}
+              <div className="mb-3">
+                <label htmlFor="email" className="form-label">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="form-control"
+                  placeholder="Digite o email"
+                  required
+                />
+              </div>
+
+              {/* Senha */}
+              <div className="mb-3">
+                <label htmlFor="password" className="form-label">
+                  Senha
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="form-control"
+                  placeholder="Digite a senha"
+                  required
+                />
+              </div>
+
+              {/* Botão de Enviar */}
+              <div className="d-grid">
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
+                  {loading ? 'Registrando...' : 'Registrar'}
+                </button>
+              </div>
+
+              {/* Mensagem */}
+              {message && (
+                <div className="mt-3">
+                  <p className="text-center text-danger">{message}</p>
                 </div>
               )}
-            </div>
+            </form>
           </div>
         </div>
       </div>

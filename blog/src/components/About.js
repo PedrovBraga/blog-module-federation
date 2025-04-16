@@ -2,7 +2,7 @@ import React from 'react';
 
 const About = () => {
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="container my-4 p-6 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-4">Sobre o Blog</h1>
       <p className="text-lg text-gray-700 mb-4">
         Bem-vindo ao nosso blog! Este é um espaço dedicado a compartilhar conhecimento, 

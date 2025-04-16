@@ -35,6 +35,7 @@ module.exports = {
         filename: 'remoteEntry.js',
         exposes: {
             './BlogApp': './src/App',
+            './PostsData': './src/data/posts.js',
         },
         remotes: {
           container: 'container@http://localhost:3000/remoteEntry.js',
@@ -50,7 +51,7 @@ module.exports = {
             },
             'react-router-dom': { 
               singleton: true,
-              requiredVersion: '"react-router-dom": "^7.1.5"'
+              requiredVersion: '^7.1.5'
             },
         },
     }),

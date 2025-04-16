@@ -50,7 +50,7 @@ module.exports = {
             },
             'react-router-dom': { 
               singleton: true,
-              requiredVersion: '"react-router-dom": "^7.1.5"'
+              requiredVersion: '^7.1.5'
             },
         },
     }),

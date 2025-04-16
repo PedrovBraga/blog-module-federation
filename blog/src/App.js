@@ -3,35 +3,28 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import PostList from './components/PostList';
 import PostDetail from './components/PostDetail';
 import About from './components/About';
+import Blog from './components/Blog';
+import { postsData } from './data/posts';
 const Layout = React.lazy(() => import('container/Layout'));
 
-const App = ({isContainer}) => {
+const App = ({isContainer, location, navigate}) => {
 
-  const posts = [
-      {
-        image: 'https://via.placeholder.com/600x300',
-        title: 'Como começar com React',
-        date: '15 de fevereiro de 2025',
-        author: 'João Silva',
-        category: 'Tecnologia',
-        summary: 'Um guia rápido e prático para iniciantes no mundo do React.',
-      },
-      {
-        image: 'https://via.placeholder.com/600x300',
-        title: 'Dicas de Produtividade',
-        date: '10 de fevereiro de 2025',
-        author: 'Maria Oliveira',
-        category: 'Estilo de Vida',
-        summary: 'Descubra como organizar seu dia e aumentar sua produtividade.',
-      },
-      // Adicione mais posts aqui
-    ];
+  // Ajustar paths dinamicamente
+  const basePath = isContainer ? '/blog' : '';
+  const sidebarOptions = [
+    { label: 'Home', path: `${basePath}/` },
+    { label: 'Posts', path: `${basePath}/posts` },
+    { label: 'About', path: `${basePath}/about` },
+  ];
+
+  // const routerLocation = isContainer ? location : undefined;
 
   const routes = (
-    <Layout isContainer={!isContainer}>
-      <Routes>
-        <Route path="/" element={<PostList posts={posts} />} />
-        <Route path="/post/:id" element={<PostDetail />} />
+    <Layout isContainer={!isContainer} showSidebar={true} optionsSidebar={sidebarOptions}>
+      <Routes location={location} navigate={navigate}>
+        <Route path="/" element={<Blog posts={postsData} />} />
+        <Route path="/posts" element={<PostList posts={postsData} />} />
+        <Route path="/post/:id" element={<PostDetail posts={postsData} />} />
         <Route path="/about" element={<About />} />
       </Routes>
     </Layout>

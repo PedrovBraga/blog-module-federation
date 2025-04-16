@@ -1,20 +1,29 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom'; // Importa o hook useLocation
+import { useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import Sidebar from './Sidebar';
 
-const Layout = ({ children, isContainer }) => {
-  const location = useLocation(); // Pega a localização atual da URL
+const Layout = ({ children, isContainer, showSidebar, optionsSidebar }) => {
+  const location = useLocation();
   
-  // Verifica se o caminho atual é `/auth` e oculta Navbar e Footer nesse caso
   const hideNavbarFooter = location.pathname.startsWith('/auth');
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Renderiza o Navbar apenas se não for exibição no container */}
+    <div className="d-flex flex-column min-vh-100">
       {!hideNavbarFooter && isContainer && <Navbar />}
-      <main className="flex-1 container mx-auto p-4">{children}</main>
-      {/* Renderiza o Navbar apenas se showNavbar for true */}
+      <div className="d-flex flex-grow-1 overflow-hidden">
+        {/* Sidebar ocupa 3 colunas do grid */}
+        {showSidebar && (
+          <div className="col-md-3 col-lg-2 bg-light p-0 overflow-auto">
+            <Sidebar options={optionsSidebar} />
+          </div>
+        )}
+        {/* Conteúdo principal ocupa o restante */}
+        <div className={`flex-grow-1 ${showSidebar ? 'col-md-9 col-lg-10' : ''} ${!isContainer ? 'p-3' : ''} overflow-auto`}>
+          {children}
+        </div>
+      </div>
       {!hideNavbarFooter && isContainer && <Footer />}
     </div>
   );

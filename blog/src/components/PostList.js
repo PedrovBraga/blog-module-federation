@@ -1,47 +1,17 @@
 import React, { useState } from 'react';
 
-const postsData = [
-  {
-    id: 1,
-    imagem: 'https://via.placeholder.com/800x400',
-    titulo: 'Primeiro Post',
-    dataPublicacao: '2025-02-10',
-    autor: 'João Silva',
-    categoria: 'Tecnologia',
-    resumo: 'Resumo do primeiro post...',
-  },
-  {
-    id: 2,
-    imagem: 'https://via.placeholder.com/800x400',
-    titulo: 'Segundo Post',
-    dataPublicacao: '2025-02-11',
-    autor: 'Maria Oliveira',
-    categoria: 'Saúde',
-    resumo: 'Resumo do segundo post...',
-  },
-  {
-    id: 3,
-    imagem: 'https://via.placeholder.com/800x400',
-    titulo: 'Terceiro Post',
-    dataPublicacao: '2025-02-12',
-    autor: 'Carlos Costa',
-    categoria: 'Tecnologia',
-    resumo: 'Resumo do terceiro post...',
-  },
-];
-
-const PostList = () => {
+const PostList = ({posts}) => {
   const [categoriaSelecionada, setCategoriaSelecionada] = useState('Todas');
 
-  const categorias = ['Todas', ...new Set(postsData.map((post) => post.categoria))];
+  const categorias = ['Todas', ...new Set(posts.map((post) => post.categoria))];
 
   const postsFiltrados = categoriaSelecionada === 'Todas'
-    ? postsData
-    : postsData.filter((post) => post.categoria === categoriaSelecionada);
+    ? posts
+    : posts.filter((post) => post.categoria === categoriaSelecionada);
 
   return (
     <div className="container my-4">
-      <h1 className="mb-4">Blog Posts</h1>
+      <h1 className="mb-4">Posts</h1>
 
       {/* Dropdown de Filtro */}
       <div className="mb-4">
@@ -65,11 +35,15 @@ const PostList = () => {
       {/* Lista de Posts */}
       <div className="row">
         {postsFiltrados.map((post) => (
-          <div key={post.id} className="col-12 mb-4">
+          <div key={post.id} className="col-md-6 mb-4">
             <div className="card shadow">
-              <img src={post.imagem} className="card-img-top" alt={post.titulo} />
+              <a href={`/post/${post.id}`}>
+                <img src={post.imagem} className="card-img-top" alt={post.titulo} />
+              </a>
               <div className="card-body">
-                <h5 className="card-title">{post.titulo}</h5>
+                <a href={`/post/${post.id}`} className="text-decoration-none">
+                  <h5 className="card-title text-primary">{post.titulo}</h5>
+                </a>
                 <p className="card-text text-muted">
                   {post.dataPublicacao} • {post.autor} • {post.categoria}
                 </p>

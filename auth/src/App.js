@@ -5,7 +5,7 @@ import Register from './components/Auth/Register';
 import ResetPassword from './components/Auth/ResetPassword';
 import Logout from './components/Auth/Logout';
 
-const App = ({isContainer}) => {
+const App = ({isContainer = false}) => {
 
   const routes = (
     <Routes>
@@ -17,15 +17,11 @@ const App = ({isContainer}) => {
     </Routes>
   );
 
-  return (
-    <>
-      {!isContainer ? (
+  return !isContainer ? (
         <Router>{routes}</Router> // Renderiza o Router se não estiver no container
       ) : (
         routes // Apenas as rotas, sem o Router, se estiver no container
-      )}
-    </>
-  );
+      )
 };
 
 export default App;

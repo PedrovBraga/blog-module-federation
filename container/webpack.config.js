@@ -19,6 +19,9 @@ module.exports = {
     rules: [
       {
         test: /\.m?js$/, // Suporte a arquivos JS/JSX
+        parser: {
+          import: true,
+        },
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
@@ -44,11 +47,13 @@ module.exports = {
       remotes: {
         auth: 'auth@http://localhost:3001/remoteEntry.js', // Remote do auth
         blog: 'blog@http://localhost:3002/remoteEntry.js', // Remote do blog
+        admin: 'admin@http://localhost:3003/remoteEntry.js', // Remote do admin
       },
       filename: 'remoteEntry.js',
       exposes: {
         './BootstrapCSS': './src/bootstrap-css.js',
-        './Layout': './src/components/Layout.js'
+        './Layout': './src/components/Layout.js',
+        './Sidebar': './src/components/Sidebar.js'
       },
       shared: {
         react: {
@@ -61,7 +66,7 @@ module.exports = {
         },
         'react-router-dom': { 
           singleton: true,
-          requiredVersion: '"react-router-dom": "^7.1.5"'
+          requiredVersion: '^7.1.5'
         },
       },
     }),
